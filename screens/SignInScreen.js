@@ -17,7 +17,7 @@ export default function SignInScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const handleSubmit = async () => {
     setErrorMessage("");
@@ -27,15 +27,15 @@ export default function SignInScreen({ navigation }) {
         { email: email, password: pwd }
       );
       console.log(response.data);
-      setIsLoading(false);
       alert("Connexion réussie!");
     } catch (error) {
       setErrorMessage(error.response.data.error);
     }
+    setIsLoading(false);
   };
   return isLoading ? (
-    <View>
-      <ActivityIndicator />
+    <View style={{ height: "100%", justifyContent: "center" }}>
+      <ActivityIndicator size="large" />
     </View>
   ) : (
     <KeyboardAwareScrollView
@@ -63,11 +63,19 @@ export default function SignInScreen({ navigation }) {
             setEmail(text);
           }}
         />
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View
+          style={[
+            styles.input,
+            {
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            },
+          ]}
+        >
           <TextInput
             placeholder="password"
-            style={styles.input}
-            secureTextEntry={visible}
+            secureTextEntry={visible ? false : true}
             onChangeText={(text) => {
               setPwd(text);
             }}
@@ -77,7 +85,11 @@ export default function SignInScreen({ navigation }) {
               setVisible(!visible);
             }}
           >
-            <Entypo name="eye" size={24} color="black" />
+            {visible ? (
+              <Entypo name="eye" size={24} color="black" />
+            ) : (
+              <Entypo name="eye-with-line" size={24} color="black" />
+            )}
           </Pressable>
         </View>
         {errorMessage && (
@@ -90,6 +102,7 @@ export default function SignInScreen({ navigation }) {
         <Pressable
           style={styles.submit}
           onPress={() => {
+            setIsLoading(true);
             handleSubmit();
           }}
         >
@@ -98,6 +111,7 @@ export default function SignInScreen({ navigation }) {
         <Pressable>
           <Text
             onPress={() => {
+              setVisible(false);
               navigation.navigate("SignUp");
             }}
           >

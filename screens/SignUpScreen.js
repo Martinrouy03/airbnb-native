@@ -5,7 +5,9 @@ import {
   TextInput,
   Pressable,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
+import { Entypo } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useState } from "react";
 import logo from "../assets/airbnb-logo.png";
@@ -17,6 +19,7 @@ export default function SignUpScreen({ navigation }) {
   const [description, setDescription] = useState("");
   const [pwd, setPwd] = useState("");
   const [pwdconf, setPwdconf] = useState("");
+  const [visibility, setVisibility] = useState([false, false]);
   const [errorMessage, setErrorMessage] = useState("");
   const [pwdMessage, setPwdMessage] = useState("");
   const handleSubmit = async () => {
@@ -84,22 +87,68 @@ export default function SignUpScreen({ navigation }) {
             setDescription(text);
           }}
         />
-        <TextInput
-          placeholder="password"
-          style={styles.input}
-          secureTextEntry={true}
-          onChangeText={(text) => {
-            setPwd(text);
-          }}
-        />
-        <TextInput
-          placeholder="confirm password"
-          style={styles.input}
-          secureTextEntry={true}
-          onChangeText={(text) => {
-            setPwdconf(text);
-          }}
-        />
+        <View
+          style={[
+            styles.input,
+            {
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            },
+          ]}
+        >
+          <TextInput
+            placeholder="password"
+            secureTextEntry={visibility[0] ? false : true}
+            onChangeText={(text) => {
+              setPwd(text);
+            }}
+          />
+          <Pressable
+            onPress={() => {
+              const newVis = [...visibility];
+              newVis[0] = !newVis[0];
+              setVisibility(newVis);
+            }}
+          >
+            {visibility[0] ? (
+              <Entypo name="eye" size={24} color="black" />
+            ) : (
+              <Entypo name="eye-with-line" size={24} color="black" />
+            )}
+          </Pressable>
+        </View>
+        <View
+          style={[
+            styles.input,
+            {
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            },
+          ]}
+        >
+          <TextInput
+            placeholder="confirm password"
+            secureTextEntry={visibility[1] ? false : true}
+            onChangeText={(text) => {
+              setPwdconf(text);
+            }}
+          />
+          <Pressable
+            onPress={() => {
+              const newVis = [...visibility];
+              newVis[1] = !newVis[1];
+              setVisibility(newVis);
+            }}
+          >
+            {visibility[1] ? (
+              <Entypo name="eye" size={24} color="black" />
+            ) : (
+              <Entypo name="eye-with-line" size={24} color="black" />
+            )}
+          </Pressable>
+        </View>
         {pwdMessage && (
           <Text style={{ color: "red", fontSize: 15, textAlign: "center" }}>
             "Passwords must be the same"
@@ -123,6 +172,7 @@ export default function SignUpScreen({ navigation }) {
         <Pressable>
           <Text
             onPress={() => {
+              setVisibility([false, false]);
               navigation.navigate("SignIn");
             }}
           >
