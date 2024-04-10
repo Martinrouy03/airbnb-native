@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import logo from "../assets/airbnb-logo.png";
 import axios from "axios";
@@ -22,6 +22,7 @@ export default function SignInScreen({ setUserToken }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+
   const handleSubmit = async () => {
     setErrorMessage("");
     try {
