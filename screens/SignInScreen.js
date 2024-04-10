@@ -10,10 +10,13 @@ import {
 import { Entypo } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import logo from "../assets/airbnb-logo.png";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/core";
 
-export default function SignInScreen({ navigation }) {
+export default function SignInScreen({ setUserToken }) {
+  const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,7 +29,9 @@ export default function SignInScreen({ navigation }) {
         "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/log_in",
         { email: email, password: pwd }
       );
-      console.log(response.data);
+      console.log(response.data.token);
+      await AsyncStorage.setItem("token", response.data.token);
+      setUserToken(response.data.token);
       alert("Connexion réussie!");
     } catch (error) {
       setErrorMessage(error.response.data.error);

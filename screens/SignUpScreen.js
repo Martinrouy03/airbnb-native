@@ -12,8 +12,10 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useState } from "react";
 import logo from "../assets/airbnb-logo.png";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/core";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function SignUpScreen({ navigation }) {
+export default function SignUpScreen({ setUserToken }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [description, setDescription] = useState("");
@@ -22,6 +24,8 @@ export default function SignUpScreen({ navigation }) {
   const [visibility, setVisibility] = useState([false, false]);
   const [errorMessage, setErrorMessage] = useState("");
   const [pwdMessage, setPwdMessage] = useState("");
+  const navigation = useNavigation();
+
   const handleSubmit = async () => {
     setErrorMessage("");
     if (pwd !== pwdconf) {
@@ -39,7 +43,10 @@ export default function SignUpScreen({ navigation }) {
             password: pwd,
           }
         );
-        console.log(response.data);
+
+        await AsyncStorage.setItem("token", response.data.token);
+        console.log(response.data.token);
+        setUserToken(response.data.token);
         alert("Connexion réussie!");
       } catch (error) {
         setErrorMessage(error.response.data.error);
