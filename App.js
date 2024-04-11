@@ -4,12 +4,14 @@ import SignUpScreen from "./screens/SignUpScreen";
 import HomeScreen from "./screens/HomeScreen";
 import SettingsScreen from "./screens/SettingScreens";
 import RoomScreen from "./screens/RoomScreen";
+import AroundMeScreen from "./screens/AroundMeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import logo from "./assets/airbnb-logo.png";
+import { Ionicons } from "@expo/vector-icons";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -22,8 +24,6 @@ export default function App() {
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
       setUserToken(userToken);
-      // const storage = AsyncStorage.getAllKeys();
-      // console.log(storage);
       setIsLoading(false);
     };
     bootstrapAsync();
@@ -42,12 +42,31 @@ export default function App() {
           </>
         ) : (
           <>
-            <Stack.Screen name="Tab">
+            <Stack.Screen name="Tab" options={{ headerShown: false }}>
               {() => (
                 <Tab.Navigator
-                  screenOptions={{
+                  screenOptions={({ route }) => ({
                     headerShown: false,
-                  }}
+                    tabBarIcon: ({ focused, color, size }) => {
+                      let iconName;
+                      if (route.name === "HomeTab") {
+                        iconName = focused ? "home" : "home-outline";
+                      } else if (route.name === "Settings") {
+                        iconName = focused ? "settings" : "settings-outline";
+                      } else if (route.name === "AroundMe") {
+                        iconName = focused
+                          ? "location-sharp"
+                          : "location-outline";
+                      }
+
+                      // You can return any component that you like here!
+                      return (
+                        <Ionicons name={iconName} size={size} color={color} />
+                      );
+                    },
+                    tabBarActiveTintColor: "tomato",
+                    tabBarInactiveTintColor: "gray",
+                  })}
                 >
                   <Tab.Screen
                     name="HomeTab"
@@ -61,11 +80,20 @@ export default function App() {
                           name="Home"
                           options={{
                             headerTitle: () => (
-                              <Image
-                                source={logo}
-                                style={{ width: 50, height: 75 }}
-                                resizeMode="contain"
-                              ></Image>
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  width: "100%",
+                                }}
+                              >
+                                <Image
+                                  source={logo}
+                                  style={{ width: 50, height: 75 }}
+                                  resizeMode="contain"
+                                ></Image>
+                              </View>
                             ),
                             // headerStyle: { flex: 1, alignItems: "center" },
                           }}
@@ -75,10 +103,22 @@ export default function App() {
                       </Stack.Navigator>
                     )}
                   </Tab.Screen>
-                  <Tab.Screen name="Settings" component={SettingsScreen} />
+                  <Tab.Screen
+                    name="AroundMe"
+                    component={SettingsScreen}
+                    options={{
+                      tabBarLabel: "Around me",
+                    }}
+                  ></Tab.Screen>
+                  <Tab.Screen
+                    name="Settings"
+                    component={AroundMeScreen}
+                    options={{
+                      tabBarLabel: "Settings",
+                    }}
+                  />
                 </Tab.Navigator>
               )}
-              {/* {() => <HomeScreen />} */}
             </Stack.Screen>
             <Stack.Screen name="Room">{() => <RoomScreen />}</Stack.Screen>
           </>

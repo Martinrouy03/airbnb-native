@@ -56,7 +56,8 @@ const HomeScreen = () => {
         <View style={{ marginVertical: 10 }}>
           <Pressable
             onPress={() => {
-              navigation.navigate("Room", { item });
+              // console.log();
+              navigation.navigate("Room", { id: item._id });
             }}
           >
             <Image

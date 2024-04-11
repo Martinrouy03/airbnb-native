@@ -21,3 +21,24 @@
     </Tab.Navigator>
   );
 }
+
+{
+  /* <FlatList
+          horizontal={true}
+          data={data.photos}
+          keyExtractor={(elem) => elem.picture_id}
+          renderItem={({ item }) => (
+            // <Image
+            //   source={{ uri: item.url }}
+            //   style={{ width: 200, height: 140 }}
+            //   resizeMode="contain"
+            // />
+
+            <Image
+              source={{ uri: item.url }}
+              style={{ width: "100%", height: 300 }}
+              resizeMode="contain"
+            />
+          )}
+        /> */
+}
