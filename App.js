@@ -1,17 +1,28 @@
 import { StyleSheet, Text, View, Image } from "react-native";
+
+// Import packages
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// Import Screens
 import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import HomeScreen from "./screens/HomeScreen";
 import SettingsScreen from "./screens/SettingScreens";
 import RoomScreen from "./screens/RoomScreen";
 import AroundMeScreen from "./screens/AroundMeScreen";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import logo from "./assets/airbnb-logo.png";
+import MyProfileScreen from "./screens/MyProfileScreen";
+
+// Import components
+import HeaderLogo from "./components/HeaderLogo";
+
+// Import Icons
 import { Ionicons } from "@expo/vector-icons";
+
+// Declare variables
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -51,15 +62,15 @@ export default function App() {
                       let iconName;
                       if (route.name === "HomeTab") {
                         iconName = focused ? "home" : "home-outline";
-                      } else if (route.name === "Settings") {
+                      } else if (route.name === "SettingsTab") {
                         iconName = focused ? "settings" : "settings-outline";
-                      } else if (route.name === "AroundMe") {
+                      } else if (route.name === "MyProfileTab") {
+                        iconName = focused ? "person" : "person-outline";
+                      } else if (route.name === "AroundMeTab") {
                         iconName = focused
                           ? "location-sharp"
                           : "location-outline";
                       }
-
-                      // You can return any component that you like here!
                       return (
                         <Ionicons name={iconName} size={size} color={color} />
                       );
@@ -79,23 +90,7 @@ export default function App() {
                         <Stack.Screen
                           name="Home"
                           options={{
-                            headerTitle: () => (
-                              <View
-                                style={{
-                                  flexDirection: "row",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  width: "100%",
-                                }}
-                              >
-                                <Image
-                                  source={logo}
-                                  style={{ width: 50, height: 75 }}
-                                  resizeMode="contain"
-                                ></Image>
-                              </View>
-                            ),
-                            // headerStyle: { flex: 1, alignItems: "center" },
+                            headerTitle: () => <HeaderLogo />,
                           }}
                         >
                           {() => <HomeScreen />}
@@ -104,19 +99,62 @@ export default function App() {
                     )}
                   </Tab.Screen>
                   <Tab.Screen
-                    name="AroundMe"
-                    component={SettingsScreen}
+                    name="AroundMeTab"
                     options={{
                       tabBarLabel: "Around me",
                     }}
-                  ></Tab.Screen>
+                  >
+                    {() => (
+                      <Stack.Navigator>
+                        <Stack.Screen
+                          name="AroundMe"
+                          options={{
+                            headerTitle: () => <HeaderLogo />,
+                          }}
+                        >
+                          {() => <AroundMeScreen />}
+                        </Stack.Screen>
+                      </Stack.Navigator>
+                    )}
+                  </Tab.Screen>
                   <Tab.Screen
-                    name="Settings"
-                    component={AroundMeScreen}
+                    name="MyProfileTab"
+                    options={{
+                      tabBarLabel: "My Profile",
+                    }}
+                  >
+                    {() => (
+                      <Stack.Navigator>
+                        <Stack.Screen
+                          name="MyProfile"
+                          options={{
+                            headerTitle: () => <HeaderLogo />,
+                          }}
+                        >
+                          {() => <MyProfileScreen />}
+                        </Stack.Screen>
+                      </Stack.Navigator>
+                    )}
+                  </Tab.Screen>
+                  <Tab.Screen
+                    name="SettingsTab"
                     options={{
                       tabBarLabel: "Settings",
                     }}
-                  />
+                  >
+                    {() => (
+                      <Stack.Navigator>
+                        <Stack.Screen
+                          name="Settings"
+                          options={{
+                            headerTitle: () => <HeaderLogo />,
+                          }}
+                        >
+                          {() => <SettingsScreen />}
+                        </Stack.Screen>
+                      </Stack.Navigator>
+                    )}
+                  </Tab.Screen>
                 </Tab.Navigator>
               )}
             </Stack.Screen>

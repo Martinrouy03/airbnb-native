@@ -32,6 +32,7 @@ export default function SignInScreen({ setUserToken }) {
       );
       console.log(response.data.token);
       await AsyncStorage.setItem("token", response.data.token);
+      await AsyncStorage.setItem("id", response.data.id);
       setUserToken(response.data.token);
       alert("Connexion réussie!");
     } catch (error) {

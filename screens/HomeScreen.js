@@ -51,12 +51,11 @@ const HomeScreen = () => {
     <FlatList
       style={{ paddingHorizontal: 20 }}
       data={data}
-      keyExtractor={(elem) => elem.id}
+      keyExtractor={(elem) => elem._id}
       renderItem={({ item }) => (
         <View style={{ marginVertical: 10 }}>
           <Pressable
             onPress={() => {
-              // console.log();
               navigation.navigate("Room", { id: item._id });
             }}
           >

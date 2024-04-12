@@ -45,6 +45,7 @@ export default function SignUpScreen({ setUserToken }) {
         );
 
         await AsyncStorage.setItem("token", response.data.token);
+        await AsyncStorage.setItem("id", response.data.id);
         console.log(response.data.token);
         setUserToken(response.data.token);
         alert("Connexion réussie!");

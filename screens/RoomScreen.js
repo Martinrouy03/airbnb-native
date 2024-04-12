@@ -11,7 +11,8 @@ import { Entypo } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/core";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import MyMapView from "../components/MyMapView";
+// import MyMapView from "../components/MyMapView";
+import MapView, { Marker } from "react-native-maps";
 
 const RoomScreen = () => {
   const [data, setData] = useState("");
@@ -24,9 +25,8 @@ const RoomScreen = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(url);
-      setIsLoading(false);
-      // console.log(url);
       setData(response.data);
+      setIsLoading(false);
     } catch (error) {
       console.log(error.message);
     }
@@ -45,14 +45,6 @@ const RoomScreen = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  console.log(data.location[1]);
-  const obj = {
-    longitude: data.location[0],
-    latitude: data.location[1],
-    title: data.title,
-    description: data.description,
-  };
-  console.log(obj);
   return isLoading ? (
     <View style={{ justifyContent: "center", alignItems: "center" }}>
       <ActivityIndicator />
@@ -103,7 +95,22 @@ const RoomScreen = () => {
           </Text>
         </Pressable>
       </View>
-      <MyMapView obj={obj} />
+      <MapView
+        style={{ height: 200 }}
+        initialRegion={{
+          longitude: data.location[0],
+          latitude: data.location[1],
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
+        }}
+      >
+        <Marker
+          coordinate={{
+            longitude: data.location[0],
+            latitude: data.location[1],
+          }}
+        ></Marker>
+      </MapView>
     </View>
   );
 };
